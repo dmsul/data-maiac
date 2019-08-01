@@ -1,7 +1,7 @@
 import os
 import socket
 
-PROJECT_NAME = 'data-modis'
+PROJECT_NAME = 'data-maiac'
 
 # Check which machine we're on
 HOST = socket.gethostname()

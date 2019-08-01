@@ -13,7 +13,9 @@ def readme():
 
 description = ''
 
-dependencies = []
+dependencies = [
+    'pandas'
+]
 
 setup(
     name=PROJECT_NAME,
