@@ -7,6 +7,8 @@ PROJECT_NAME = 'data-maiac'
 HOST = socket.gethostname()
 if HOST in ('sullivan-10d', 'sullivan-7d', 'DESKTOP-HOME'):
     data_root = "D:\\"
+elif HOST in ('ashenfarb-10d', ):
+    data_root = "C:\\"
 else:
     data_root = r'\\Sullivan-10d\d'
 
