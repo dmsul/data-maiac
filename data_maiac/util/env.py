@@ -15,3 +15,7 @@ DATA_PATH = os.path.join(data_root, 'Data', PROJECT_NAME)
 
 def data_path(*args):
     return os.path.join(DATA_PATH, *args)
+
+
+def src_path(*args):
+    return data_path('src', *args)
