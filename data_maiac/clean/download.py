@@ -30,9 +30,8 @@ def get_all_dates() -> List[str]:
     html_doc = requests.get(ROOT_URL).text
     soup = BeautifulSoup(html_doc, 'html.parser')
 
-    # TODO: restrict this list to get rid of the non-date links in the
-    # beginning
-    all_dates = [link.get('href') for link in soup.find_all('a')]
+    all_links = [link.get('href') for link in soup.find_all('a')]
+    all_dates = [x for x in all_links if x[:2] == '20']
 
     return all_dates
 
@@ -55,4 +54,5 @@ def download_file(url: str) -> None:
 
 
 if __name__ == "__main__":
+    get_all_dates()
     example_list_of_hdf_files = files_on_date('2019.07.01')
