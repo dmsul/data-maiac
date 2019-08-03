@@ -19,10 +19,17 @@ def main() -> None:
     for date in all_dates:
         files_for_date = files_on_date(date)
         for filename in files_for_date:
-            # If file not in H or V range, `continue` (go to next filename)
+            if not hdf_file_is_in_US(filename):
+                continue
             # elif already on disk, `continue`
             # Else, call `download_file`
             pass
+
+
+def hdf_file_is_in_US(filename: str) -> bool:
+    hv_section = filename.split('.')[2]
+    h, v = [int(x) for x in hv_section.replace('h', '').split('v')]
+    return (US_H_MIN <= h <= US_H_MAX) and (US_V_MIN <= v <= US_V_MAX)
 
 
 def get_all_dates() -> List[str]:
