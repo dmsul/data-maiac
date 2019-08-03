@@ -54,5 +54,5 @@ def download_file(url: str) -> None:
 
 
 if __name__ == "__main__":
-    get_all_dates()
+    all_dates = get_all_dates()
     example_list_of_hdf_files = files_on_date('2019.07.01')
