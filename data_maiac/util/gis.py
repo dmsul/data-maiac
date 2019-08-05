@@ -7,4 +7,6 @@ if __name__ == '__main__':
     y = 39.9999999964079
     e, n = sinu(x, y)
     UpperLeftPointMtrs = (-8895604.157333, 4447802.078667)
-    assert int(e) == int(UpperLeftPointMtrs[0]) and int(n) == int(UpperLeftPointMtrs[1])
+    assert (
+        int(e) == int(UpperLeftPointMtrs[0]) and
+        int(n) == int(UpperLeftPointMtrs[1]))
