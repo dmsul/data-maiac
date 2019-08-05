@@ -59,9 +59,10 @@ def files_on_date(date: str) -> List[str]:
     return all_hdf_files
 
 
-def download_file(url: str) -> None:
+def download_file(date: str, filename: str) -> None:
     # url pattern for each file =
     # {ROOT_URL}/yyyy.mm.dd/MCD19A2.A{YYYYDDD}.h{HH}v{VV}.006.{garbage}.hdf
+    file_url = ROOT_URL + '/' + date + '/' + filename
     pass
 
 
