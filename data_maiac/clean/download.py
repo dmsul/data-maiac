@@ -17,15 +17,18 @@ ROOT_URL = 'https://e4ftl01.cr.usgs.gov/MOTA/MCD19A2.006'
 
 
 def main() -> None:
+    session = None
     all_dates = get_all_dates()
     for date in all_dates:
         files_for_date = files_on_date(date)
         for filename in files_for_date:
             if not hdf_file_is_in_US(filename):
                 continue
-            elif os.path.exists(hdf_local_filepath(date, filename)):
+            if os.path.exists(hdf_local_filepath(date, filename)):
                 continue
-            download_file(date, filename)
+            elif not session:
+                session = download_file(date, filename)
+            download_file(date, filename, session)
 
 
 def hdf_local_filepath(date: str, filename: str) -> str:
@@ -100,10 +103,10 @@ def hdf_file_url(date: str, filename: str) -> str:
 
 
 if __name__ == "__main__":
-    all_dates = get_all_dates()
-    a_date = all_dates[1000]
-    example_list_of_hdf_files = files_on_date(a_date)
-    # Test downloading a file below
-    session = download_file(a_date, example_list_of_hdf_files[6])
-    session = download_file(a_date, example_list_of_hdf_files[7],
-                            session=session)
+    # all_dates = get_all_dates()
+    # a_date = all_dates[1000]
+    # example_list_of_hdf_files = files_on_date(a_date)
+    # # Test downloading a file below
+    # session = download_file(a_date, example_list_of_hdf_files[6])
+    # download_file(a_date, example_list_of_hdf_files[7], session)
+    main()
