@@ -62,7 +62,7 @@ def files_on_date(date: str) -> List[str]:
 
 
 def download_file(date: str, filename: str, session:
-                  Optional[requests.Session]=None) -> None:
+                  Optional[requests.Session]=None) -> requests.Session:
     """ Create src/date/ directory if it doesn't exist.
         Download and save hdf file. """
 
@@ -73,17 +73,19 @@ def download_file(date: str, filename: str, session:
 
     if session is None:
         session, username, password = initiate_earthdata_session()
-
-    req = session.request('get', hdf_file_url(date, filename))
-    r = session.get(req.url, auth=(username, password))
+        req = session.request('get', hdf_file_url(date, filename))
+        r = session.get(req.url, auth=(username, password))
+    else:
+        req = session.request('get', hdf_file_url(date, filename))
+        r = session.get(req.url)
 
     if r.ok:
         with open(hdf_local_filepath(date, filename), 'wb') as f:
             f.write(r.content)
     else:
         print("FAILURE!!")
-        import ipdb
-        ipdb.set_trace()
+
+    return session
 
 
 def initiate_earthdata_session():
@@ -103,4 +105,5 @@ if __name__ == "__main__":
     a_date = all_dates[1000]
     example_list_of_hdf_files = files_on_date(a_date)
     # Test downloading a file below
-    download_file(a_date, example_list_of_hdf_files[0])
+    session = download_file(a_date, example_list_of_hdf_files[6])
+    session = download_file(a_date, example_list_of_hdf_files[7])
