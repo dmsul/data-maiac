@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import List, Optional
 from bs4 import BeautifulSoup
 import requests
@@ -16,19 +17,19 @@ ROOT_URL = 'https://e4ftl01.cr.usgs.gov/MOTA/MCD19A2.006'
 # Download all HDF files that are in H and V ranges and aren't already on disk
 
 
-def main() -> None:
+def main(year: int) -> None:
     session = None
-    all_dates = get_all_dates()
-    for date in all_dates:
-        files_for_date = files_on_date(date)
-        for filename in files_for_date:
+    this_year = [x for x in get_all_dates() if int(x[:4]) == year]
+    for date in this_year[:10]:
+        for filename in files_on_date(date):
             if not hdf_file_is_in_US(filename):
                 continue
-            if os.path.exists(hdf_local_filepath(date, filename)):
+            elif os.path.exists(hdf_local_filepath(date, filename)):
                 continue
             elif not session:
                 session = download_file(date, filename)
-            download_file(date, filename, session)
+            else:
+                download_file(date, filename, session)
 
 
 def hdf_local_filepath(date: str, filename: str) -> str:
@@ -86,6 +87,7 @@ def download_file(date: str, filename: str, session:
             f.write(r.content)
     else:
         print("FAILURE!!")
+        sys.exit(1)
 
     return session
 
@@ -109,4 +111,4 @@ if __name__ == "__main__":
     # # Test downloading a file below
     # session = download_file(a_date, example_list_of_hdf_files[6])
     # download_file(a_date, example_list_of_hdf_files[7], session)
-    main()
+    main(2015)
