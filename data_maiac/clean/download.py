@@ -1,6 +1,8 @@
-from typing import List
+import os
+from typing import List, Optional
 from bs4 import BeautifulSoup
 import requests
+
 from util.env import src_path
 
 US_H_MIN = 7
@@ -59,12 +61,49 @@ def files_on_date(date: str) -> List[str]:
     return all_hdf_files
 
 
-def download_file(url: str) -> None:
-    # url pattern for each file =
-    # {ROOT_URL}/yyyy.mm.dd/MCD19A2.A{YYYYDDD}.h{HH}v{VV}.006.{garbage}.hdf
-    pass
+def download_file(date: str, filename: str, session:
+                  Optional[requests.Session]=None) -> requests.Session:
+    """ Create src/date/ directory if it doesn't exist.
+        Download and save hdf file. """
+
+    date_dir = src_path(date)
+    if not os.path.exists(date_dir):
+        print(f'Creating directory: {date_dir}')
+        os.mkdir(date_dir)
+
+    if session is None:
+        session, username, password = initiate_earthdata_session()
+        req = session.request('get', hdf_file_url(date, filename))
+        r = session.get(req.url, auth=(username, password))
+    else:
+        req = session.request('get', hdf_file_url(date, filename))
+        r = session.get(req.url)
+
+    if r.ok:
+        with open(hdf_local_filepath(date, filename), 'wb') as f:
+            f.write(r.content)
+    else:
+        print("FAILURE!!")
+
+    return session
+
+
+def initiate_earthdata_session():
+    session = requests.Session()
+    username = input("Username: ")
+    password = input("Password: ")
+
+    return session, username, password
+
+
+def hdf_file_url(date: str, filename: str) -> str:
+    return ROOT_URL + '/' + date + '/' + filename
 
 
 if __name__ == "__main__":
     all_dates = get_all_dates()
-    example_list_of_hdf_files = files_on_date('2019.07.01')
+    a_date = all_dates[1000]
+    example_list_of_hdf_files = files_on_date(a_date)
+    # Test downloading a file below
+    session = download_file(a_date, example_list_of_hdf_files[6])
+    session = download_file(a_date, example_list_of_hdf_files[7])
