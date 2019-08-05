@@ -1,6 +1,7 @@
 from typing import List
 from bs4 import BeautifulSoup
 import requests
+from util.env import src_path
 
 US_H_MIN = 7
 US_H_MAX = 13
@@ -24,6 +25,10 @@ def main() -> None:
             # elif already on disk, `continue`
             # Else, call `download_file`
             pass
+
+
+def hdf_local_filepath(date: str, filename: str) -> str:
+    return src_path(date, filename)
 
 
 def hdf_file_is_in_US(filename: str) -> bool:
