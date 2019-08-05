@@ -5,7 +5,7 @@ PROJECT_NAME = 'data-maiac'
 
 # Check which machine we're on
 HOST = socket.gethostname()
-if HOST in ('sullivan-10d', 'sullivan-7d', 'DESKTOP-HOME'):
+if HOST in ('sullivan-10d', 'sullivan-7d', 'DESKTOP-HOME', 'ThinkPad-PC'):
     data_root = "D:\\"
 elif HOST in ('ashenfarb-10d', ):
     data_root = "C:\\"

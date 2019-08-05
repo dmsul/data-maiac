@@ -106,4 +106,5 @@ if __name__ == "__main__":
     example_list_of_hdf_files = files_on_date(a_date)
     # Test downloading a file below
     session = download_file(a_date, example_list_of_hdf_files[6])
-    session = download_file(a_date, example_list_of_hdf_files[7])
+    session = download_file(a_date, example_list_of_hdf_files[7],
+                            session=session)
