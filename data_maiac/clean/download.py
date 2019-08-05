@@ -24,9 +24,9 @@ def main() -> None:
         for filename in files_for_date:
             if not hdf_file_is_in_US(filename):
                 continue
-            # elif already on disk, `continue`
-            # Else, call `download_file`
-            pass
+            elif os.path.exists(hdf_local_filepath(date, filename)):
+                continue
+            download_file(date, filename)
 
 
 def hdf_local_filepath(date: str, filename: str) -> str:
