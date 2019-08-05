@@ -2,6 +2,7 @@ from typing import List
 from bs4 import BeautifulSoup
 import requests
 from util.env import src_path
+import os
 
 US_H_MIN = 7
 US_H_MAX = 13
@@ -60,12 +61,21 @@ def files_on_date(date: str) -> List[str]:
 
 
 def download_file(date: str, filename: str) -> None:
-    # url pattern for each file =
-    # {ROOT_URL}/yyyy.mm.dd/MCD19A2.A{YYYYDDD}.h{HH}v{VV}.006.{garbage}.hdf
-    file_url = ROOT_URL + '/' + date + '/' + filename
-    pass
+    """ Create src/date/ directory if it doesn't exist.
+        Download and save hdf file. """
+    date_dir = src_path(date)
+    if not os.path.exists(date_dir):
+        os.mkdir(date_dir)
+
+    hdf_pathname = hdf_local_filepath(date, filename)
+    hdf_file_url = ROOT_URL + '/' + date + '/' + filename
+    hdf_file = requests.get(hdf_file_url)
+    with open(hdf_pathname, 'wb') as f:
+        f.write(hdf_file.content)
 
 
 if __name__ == "__main__":
     all_dates = get_all_dates()
     example_list_of_hdf_files = files_on_date('2019.07.01')
+    # Test downloading a file below
+    download_file('2019.07.01', 'MCD19A2.A2000057.h32v07.006.2018013034543.hdf')
