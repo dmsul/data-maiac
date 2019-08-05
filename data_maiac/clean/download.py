@@ -17,7 +17,6 @@ ROOT_URL = 'https://e4ftl01.cr.usgs.gov/MOTA/MCD19A2.006'
 
 
 def main() -> None:
-    # TODO: INCOMPLETE FUNCTION
     all_dates = get_all_dates()
     for date in all_dates:
         files_for_date = files_on_date(date)
