@@ -63,8 +63,10 @@ def files_on_date(date: str) -> List[str]:
 def download_file(date: str, filename: str) -> None:
     """ Create src/date/ directory if it doesn't exist.
         Download and save hdf file. """
+
     date_dir = src_path(date)
     if not os.path.exists(date_dir):
+        print(f'Creating directory: {date_dir}')
         os.mkdir(date_dir)
 
     hdf_pathname = hdf_local_filepath(date, filename)
@@ -76,6 +78,7 @@ def download_file(date: str, filename: str) -> None:
 
 if __name__ == "__main__":
     all_dates = get_all_dates()
-    example_list_of_hdf_files = files_on_date('2019.07.01')
+    a_date = all_dates[1000]
+    example_list_of_hdf_files = files_on_date(a_date)
     # Test downloading a file below
-    download_file('2019.07.01', 'MCD19A2.A2000057.h32v07.006.2018013034543.hdf')
+    download_file(a_date, example_list_of_hdf_files[0])
