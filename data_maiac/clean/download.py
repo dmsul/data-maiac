@@ -1,16 +1,18 @@
 import os
 import sys
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from bs4 import BeautifulSoup
 import requests
 
 from util.env import src_path
 
-US_H_MIN = 7
-US_H_MAX = 13
-US_V_MIN = 2
-US_V_MAX = 6
+US_HV_BOUNDS: Dict[int, tuple] = {
+    # Keys is V; tuples are matching H
+    4: (8, 9, 10, 11, 12, 13),
+    5: (8, 9, 10, 11, 12),
+    6: (8, 9, 10),
+}
 
 ROOT_URL = 'https://e4ftl01.cr.usgs.gov/MOTA/MCD19A2.006'
 
@@ -21,7 +23,7 @@ ROOT_URL = 'https://e4ftl01.cr.usgs.gov/MOTA/MCD19A2.006'
 def main(year: int) -> None:
     session = None
     this_year = [x for x in get_all_dates() if int(x[:4]) == year]
-    for date in this_year[:2]:
+    for date in this_year[5:35]:
         for filename in files_on_date(date):
             if not hdf_file_is_in_US(filename):
                 continue
@@ -40,7 +42,10 @@ def hdf_local_filepath(date: str, filename: str) -> str:
 def hdf_file_is_in_US(filename: str) -> bool:
     hv_section = filename.split('.')[2]
     h, v = [int(x) for x in hv_section.replace('h', '').split('v')]
-    return (US_H_MIN <= h <= US_H_MAX) and (US_V_MIN <= v <= US_V_MAX)
+    if v in US_HV_BOUNDS:
+        return h in US_HV_BOUNDS[v]
+    else:
+        return False
 
 
 def get_all_dates() -> List[str]:
@@ -84,8 +89,10 @@ def download_file(date: str, filename: str, session:
         r = session.get(req.url)
 
     if r.ok:
+        print(f"Downloading {filename}...", end='', flush=True)
         with open(hdf_local_filepath(date, filename), 'wb') as f:
             f.write(r.content)
+        print("Done!", flush=True)
     else:
         print("FAILURE!!")
         sys.exit(1)
