@@ -16,14 +16,11 @@ US_HV_BOUNDS: Dict[int, tuple] = {
 
 ROOT_URL = 'https://e4ftl01.cr.usgs.gov/MOTA/MCD19A2.006'
 
-# Loop over all dates...
-# Download all HDF files that are in H and V ranges and aren't already on disk
-
 
 def main(year: int) -> None:
     session = None
     this_year = [x for x in get_all_dates() if int(x[:4]) == year]
-    for date in this_year[5:35]:
+    for date in this_year[:35]:
         for filename in files_on_date(date):
             if not hdf_file_is_in_US(filename):
                 continue
@@ -42,10 +39,7 @@ def hdf_local_filepath(date: str, filename: str) -> str:
 def hdf_file_is_in_US(filename: str) -> bool:
     hv_section = filename.split('.')[2]
     h, v = [int(x) for x in hv_section.replace('h', '').split('v')]
-    if v in US_HV_BOUNDS:
-        return h in US_HV_BOUNDS[v]
-    else:
-        return False
+    return v in US_HV_BOUNDS and h in US_HV_BOUNDS[v]
 
 
 def get_all_dates() -> List[str]:
@@ -113,10 +107,4 @@ def hdf_file_url(date: str, filename: str) -> str:
 
 
 if __name__ == "__main__":
-    # all_dates = get_all_dates()
-    # a_date = all_dates[1000]
-    # example_list_of_hdf_files = files_on_date(a_date)
-    # # Test downloading a file below
-    # session = download_file(a_date, example_list_of_hdf_files[6])
-    # download_file(a_date, example_list_of_hdf_files[7], session)
     main(2015)
