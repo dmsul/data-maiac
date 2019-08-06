@@ -23,7 +23,7 @@ ROOT_URL = 'https://e4ftl01.cr.usgs.gov/MOTA/MCD19A2.006'
 def main(year: int) -> None:
     session = None
     this_year = [x for x in get_all_dates() if int(x[:4]) == year]
-    for date in this_year[5:35]:
+    for date in this_year[0::100]:
         for filename in files_on_date(date):
             if not hdf_file_is_in_US(filename):
                 continue
@@ -119,4 +119,6 @@ if __name__ == "__main__":
     # # Test downloading a file below
     # session = download_file(a_date, example_list_of_hdf_files[6])
     # download_file(a_date, example_list_of_hdf_files[7], session)
-    main(2015)
+    main(2000)
+    main(2007)
+    main(2019)
