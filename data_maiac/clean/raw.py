@@ -1,4 +1,5 @@
 from glob import glob
+from typing import Tuple
 
 import numpy as np
 from pyhdf.SD import SD, SDC
@@ -25,6 +26,24 @@ def aod47_flat(hdf: SD) -> np.ndarray:
     return aod
 
 
+def get_corners(hdf: SD) -> Tuple[Tuple[float, float], Tuple[float, float]]:
+    metadata_str = hdf.attributes()['StructMetadata.0'].replace('\x00', '')
+    wtf = metadata_str.replace('\t', '').split('\n')
+    points = [x for x in wtf
+              if 'UpperLeftPointMtrs' in x or 'LowerRightMtrs' in x]
+    assert len(points) == 4
+
+    a, b = points[0].split('=')
+    assert a == 'UpperLeftPointMtrs'
+    UpperLeftPointMtrs = eval(b)
+
+    a, b = points[1].split('=')
+    assert a == 'LowerRightMtrs'
+    LowerRightMtrs = eval(b)
+
+    return UpperLeftPointMtrs, LowerRightMtrs
+
+
 def load_hdf(date: str, filename: str) -> SD:
     hdf_path = hdf_local_filepath(date, filename)
     hdf = SD(hdf_path, SDC.READ)
@@ -38,3 +57,4 @@ if __name__ == '__main__':
     hdf = load_hdf(date, filename)
 
     aod = aod47_flat(hdf)
+    ul, lr = get_corners(hdf)
