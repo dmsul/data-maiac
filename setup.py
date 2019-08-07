@@ -14,7 +14,12 @@ def readme():
 description = ''
 
 dependencies = [
-    'pandas'
+    'bs4',
+    'numpy',
+    'pandas',
+    'pyhdf',
+    'pyproj',
+    'requests',
 ]
 
 setup(
