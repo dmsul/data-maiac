@@ -4,24 +4,33 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 from pyhdf.SD import SD, SDC
+from econtools import load_or_build
 
+from util.env import data_path
 from util.gis import sinu
 from clean.download import hdf_local_filepath
 
 SCALE_VALUE_47 = 0.001
 
 
+@load_or_build(data_path('aod47_{date}.pkl'))
 def aod47_day_df(date: str) -> pd.DataFrame:
     filelist = glob(hdf_local_filepath(date, '*.hdf'))
+    if len(filelist) == 0:
+        raise ValueError(f"No HDF files found for {date}")
     dfs = [aod47_day_grid_df(f) for f in filelist]
     df = pd.concat(dfs, ignore_index=True)
 
+    # De-scale to make it easier to store as int16
     df['aod'] /= SCALE_VALUE_47
     df['aod'] = df['aod'].astype(np.int16)
 
+    # Convert sinusoidal to lat/lon
     df['x'], df['y'] = sinu(df['x'].values, df['y'].values, inverse=True)
     for col in ('x', 'y'):
         df[col] = df[col].astype(np.float32)
+
+    df.columns.name = date
 
     return df
 
@@ -115,4 +124,4 @@ def aod47_combine_todf(aod: np.ndarray,
 
 
 if __name__ == "__main__":
-    df = aod47_day_df('2015.01.01')
+    df = aod47_day_df(f'2015.01.10')
