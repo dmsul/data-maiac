@@ -15,6 +15,19 @@ SCALE_VALUE_47 = 0.001
 
 @load_or_build(data_path('aod47_{date}.pkl'))
 def aod47_day_df(date: str) -> pd.DataFrame:
+    """Aerosol Optical Depth (AOD) (0.47 micrometer) from MODIS Multi-Angle
+    Implementation of Atmospheric Correction (MAIAC) as pandas DataFrame.
+
+    Args:
+        date (str): Date in the format 'YYYY.MM.DD'. Date to retrieve MODIS
+        MAIAC AOD data.
+
+    Returns:
+        df (DataFrame): Each row is a MODIS observation from the given date.
+            Columns 'x' and 'y' are longitude and latitude, in the sinusoidal
+            transformation, for the gridcell centroid of the observation.
+            Column 'aod' is observed AOD in the gridcell.
+    """
     filelist = glob(hdf_local_filepath(date, '*.hdf'))
     if len(filelist) == 0:
         raise ValueError(f"No HDF files found for {date}")
