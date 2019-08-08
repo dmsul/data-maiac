@@ -14,7 +14,7 @@ SCALE_VALUE_47 = 0.001
 
 
 @load_or_build(data_path('aod47_{date}.pkl'))
-def aod47_day_df(date: str) -> pd.DataFrame:
+def aod47_conus_day(date: str) -> pd.DataFrame:
     """
     Aerosol Optical Depth (AOD) (0.47 micrometer) from MODIS Multi-Angle
     Implementation of Atmospheric Correction (MAIAC) as pandas DataFrame.
@@ -140,4 +140,4 @@ def aod47_combine_todf(aod: np.ndarray,
 
 
 if __name__ == "__main__":
-    df = aod47_day_df(f'2015.01.10')
+    df = aod47_conus_day(f'2015.01.10')

@@ -8,7 +8,7 @@ from econtools import load_or_build, state_abbr_to_name
 from data_census.clean.cartographic_boundaries.state import state_shape_df
 
 from data_maiac.util.env import src_path, data_path
-from data_maiac.clean.raw import aod47_day_df
+from data_maiac.clean.raw import aod47_conus_day
 
 
 @load_or_build(data_path('{state_abbr}_{year}_{month}.pkl'))
@@ -18,6 +18,8 @@ def aod47_state_month(state_abbr: str, year: int, month: int) -> pd.DataFrame:
     Implementation of Atmospheric Correction (MAIAC) as pandas DataFrame.
     Outputs all data for a specified state and month.
 
+    NOTE: Does not cover Hawaii (HI) or Alaska (AK).
+
     Args:
         state_abbr (str): 2-character US state abbreviation.
         year (int): 4-digit year.
@@ -25,8 +27,8 @@ def aod47_state_month(state_abbr: str, year: int, month: int) -> pd.DataFrame:
 
     Returns:
         df (DataFrame): All MAIAC observations in the queried state and month.
-            Columns 'x' and 'y' give the gridcell centroid in degrees longitude and latitude (WGS84) for
-            the gridcell centroid.
+            Columns 'x' and 'y' give the gridcell centroid in degrees longitude
+            and latitude (WGS84).
     """
     day_list = [
         os.path.split(x)[1] for x in
@@ -47,7 +49,7 @@ def _get_state_bounds(state_abbr: str) -> tuple:
 
 
 def prep_day(date: str, bounds: tuple) -> pd.DataFrame:
-    df = aod47_day_df(date)
+    df = aod47_conus_day(date)
     minx, miny, maxx, maxy = bounds
     df = df[
         (df['x'] <= maxx) &
