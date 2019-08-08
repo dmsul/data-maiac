@@ -17,10 +17,10 @@ SCALE_VALUE_47 = 0.001
 def aod47_day_df(date: str) -> pd.DataFrame:
     """Aerosol Optical Depth (AOD) (0.47 micrometer) from MODIS Multi-Angle
     Implementation of Atmospheric Correction (MAIAC) as pandas DataFrame.
+    Outputs all data for a specified date. Extent is full US.
 
     Args:
-        date (str): Date in the format 'YYYY.MM.DD'. Date to retrieve MODIS
-        MAIAC AOD data.
+        date (str): Date in the format 'YYYY.MM.DD'.
 
     Returns:
         df (DataFrame): Each row is a MODIS observation from the given date.

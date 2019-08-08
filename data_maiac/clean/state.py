@@ -13,6 +13,22 @@ from data_maiac.clean.raw import aod47_day_df
 
 @load_or_build(data_path('{state_abbr}_{year}_{month}.pkl'))
 def aod47_state_month(state_abbr: str, year: int, month: int) -> pd.DataFrame:
+    """Aerosol Optical Depth (AOD) (0.47 micrometer) from MODIS Multi-Angle
+    Implementation of Atmospheric Correction (MAIAC) as pandas DataFrame.
+    Outputs all data for a specified state and month.
+
+    Args:
+        state_abbr (str): 2-character US state abbreviation.
+        year (int): 4-digit year.
+        month (int): Calendar month.
+
+    Returns:
+        df (DataFrame): Each row is a MODIS observation in the queried state,
+            year, and month.  Columns 'x' and 'y' are longitude and latitude,
+            in the sinusoidal transformation, for the gridcell centroid of the
+            observation. Column 'aod' is observed AOD in the gridcell. Also
+            includes columns 'month', 'year', and 'day'.
+    """
     day_list = [
         os.path.split(x)[1] for x in
         glob(src_path(f'{year}.{str(month).zfill(2)}.*'))
