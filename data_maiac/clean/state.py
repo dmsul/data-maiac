@@ -12,7 +12,7 @@ from data_maiac.clean.raw import aod47_day_df
 
 
 @load_or_build(data_path('{state_abbr}_{year}_{month}.pkl'))
-def state_month(state_abbr: str, year: int, month: int) -> pd.DataFrame:
+def aod47_state_month(state_abbr: str, year: int, month: int) -> pd.DataFrame:
     day_list = [
         os.path.split(x)[1] for x in
         glob(src_path(f'{year}.{str(month).zfill(2)}.*'))
@@ -53,4 +53,4 @@ def prep_day(date: str, bounds: tuple) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    df = state_month('PA', 2013, 1)
+    df = aod47_state_month('PA', 2013, 1)
