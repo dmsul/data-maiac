@@ -21,7 +21,7 @@ ROOT_URL = 'https://e4ftl01.cr.usgs.gov/MOTA/MCD19A2.006'
 def main(year: int) -> None:
     session = None
     this_year = [x for x in get_all_dates() if int(x[:4]) == year]
-    for date in this_year[:35]:
+    for date in this_year:
         for filename in files_on_date(date):
             if not hdf_file_is_in_US(filename):
                 continue
@@ -109,8 +109,9 @@ def hdf_file_url(date: str, filename: str) -> str:
 
 def cli():
     parser = argparse.ArgumentParser('Download MAIAC data')
-    help_str = 'Input year to download. Int. 2000-present.'
-    parser.add_argument('year', type=int, help=help_str)
+    parser.add_argument(
+        'year', type=int,
+        help='Input year to download. Int. 2000-present.')
 
     args = parser.parse_args()
 
