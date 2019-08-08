@@ -8,7 +8,7 @@ from econtools import load_or_build, state_abbr_to_name
 from data_census.clean.cartographic_boundaries.state import state_shape_df
 
 from data_maiac.util.env import src_path, data_path
-from data_maiac.clean.raw import aod47_conus_day
+from data_maiac.clean.raw import aod47_conus_day, SCALE_VALUE_47
 
 
 @load_or_build(data_path('{state_abbr}_{year}_{month}.pkl'))
@@ -39,7 +39,11 @@ def aod47_state_month(state_abbr: str, year: int, month: int) -> pd.DataFrame:
 
     dfs = [prep_day(date, bounds) for date in day_list]
 
-    return pd.concat(dfs, ignore_index=True)
+    df = pd.concat(dfs, ignore_index=True)
+
+    df['aod'] *= SCALE_VALUE_47
+
+    return df
 
 def _get_state_bounds(state_abbr: str) -> tuple:
     df = state_shape_df(2010, '5m')
