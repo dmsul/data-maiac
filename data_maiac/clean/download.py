@@ -1,6 +1,7 @@
 import os
 import sys
 from typing import List, Optional, Dict
+import argparse
 
 from bs4 import BeautifulSoup
 import requests
@@ -106,5 +107,17 @@ def hdf_file_url(date: str, filename: str) -> str:
     return ROOT_URL + '/' + date + '/' + filename
 
 
+def cli():
+    parser = argparse.ArgumentParser('Download MAIAC data')
+    help_str = 'Input year to download. Int. 2000-present.'
+    parser.add_argument('year', type=int, help=help_str)
+
+    args = parser.parse_args()
+
+    return args
+
+
 if __name__ == "__main__":
-    main(2015)
+    args = cli()
+
+    main(args.year)
