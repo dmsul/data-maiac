@@ -6,7 +6,7 @@ import argparse
 from bs4 import BeautifulSoup
 import requests
 
-from util.env import src_path
+from data_maiac.util.env import src_path
 
 US_HV_BOUNDS: Dict[int, tuple] = {
     # Keys is V; tuples are matching H

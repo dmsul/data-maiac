@@ -6,9 +6,9 @@ import pandas as pd
 from pyhdf.SD import SD, SDC
 from econtools import load_or_build
 
-from util.env import data_path
-from util.gis import sinu
-from clean.download import hdf_local_filepath
+from data_maiac.util.env import data_path
+from data_maiac.util.gis import sinu
+from data_maiac.clean.download import hdf_local_filepath
 
 SCALE_VALUE_47 = 0.001
 

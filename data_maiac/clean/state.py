@@ -7,8 +7,8 @@ from econtools import load_or_build, state_abbr_to_name
 
 from data_census.clean.cartographic_boundaries.state import state_shape_df
 
-from util.env import src_path, data_path
-from clean.raw import aod47_day_df
+from data_maiac.util.env import src_path, data_path
+from data_maiac.clean.raw import aod47_day_df
 
 
 @load_or_build(data_path('{state_abbr}_{year}_{month}.pkl'))
