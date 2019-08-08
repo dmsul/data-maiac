@@ -15,18 +15,21 @@ SCALE_VALUE_47 = 0.001
 
 @load_or_build(data_path('aod47_{date}.pkl'))
 def aod47_day_df(date: str) -> pd.DataFrame:
-    """Aerosol Optical Depth (AOD) (0.47 micrometer) from MODIS Multi-Angle
+    """
+    Aerosol Optical Depth (AOD) (0.47 micrometer) from MODIS Multi-Angle
     Implementation of Atmospheric Correction (MAIAC) as pandas DataFrame.
-    Outputs all data for a specified date. Extent is full US.
+    Outputs all data for a specified date. Extent is continental US (CONUS).
+
+    NOTE: AOD is scaled in order to be stored as a 16-bit integer. To get
+    actual AOD, multiply by 0.001.
 
     Args:
         date (str): Date in the format 'YYYY.MM.DD'.
 
     Returns:
-        df (DataFrame): Each row is a MODIS observation from the given date.
-            Columns 'x' and 'y' are longitude and latitude, in the sinusoidal
-            transformation, for the gridcell centroid of the observation.
-            Column 'aod' is observed AOD in the gridcell.
+        df (DataFrame): All MAIAC observations for the given day in CONUS.
+            Columns 'x' and 'y' give the gridcell centroid in degrees longitude
+            and latitude (WGS84).
     """
     filelist = glob(hdf_local_filepath(date, '*.hdf'))
     if len(filelist) == 0:
