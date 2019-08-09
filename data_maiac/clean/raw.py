@@ -6,15 +6,31 @@ import pandas as pd
 from pyhdf.SD import SD, SDC
 from econtools import load_or_build
 
-from util.env import data_path
-from util.gis import sinu
-from clean.download import hdf_local_filepath
+from data_maiac.util.env import data_path
+from data_maiac.util.gis import sinu
+from data_maiac.clean.download import hdf_local_filepath
 
 SCALE_VALUE_47 = 0.001
 
 
 @load_or_build(data_path('aod47_{date}.pkl'))
-def aod47_day_df(date: str) -> pd.DataFrame:
+def aod47_conus_day(date: str) -> pd.DataFrame:
+    """
+    Aerosol Optical Depth (AOD) (0.47 micrometer) from MODIS Multi-Angle
+    Implementation of Atmospheric Correction (MAIAC) as pandas DataFrame.
+    Outputs all data for a specified date. Extent is continental US (CONUS).
+
+    NOTE: AOD is scaled in order to be stored as a 16-bit integer. To get
+    actual AOD, multiply by 0.001.
+
+    Args:
+        date (str): Date in the format 'YYYY.MM.DD'.
+
+    Returns:
+        df (DataFrame): All MAIAC observations for the given day in CONUS.
+            Columns 'x' and 'y' give the gridcell centroid in degrees longitude
+            and latitude (WGS84).
+    """
     filelist = glob(hdf_local_filepath(date, '*.hdf'))
     if len(filelist) == 0:
         raise ValueError(f"No HDF files found for {date}")
@@ -124,4 +140,4 @@ def aod47_combine_todf(aod: np.ndarray,
 
 
 if __name__ == "__main__":
-    df = aod47_day_df(f'2015.01.10')
+    df = aod47_conus_day(f'2015.01.10')

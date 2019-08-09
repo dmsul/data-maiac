@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-from data_modis.util.env import PROJECT_NAME
+from data_maiac.util.env import PROJECT_NAME
 
 
 def readme():
@@ -15,6 +15,8 @@ description = ''
 
 dependencies = [
     'BeautifulSoup4',
+    'data-census',
+    'econtools',
     'numpy',
     'pandas',
     'pyhdf',
