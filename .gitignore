@@ -4,3 +4,5 @@
 data
 out
 *egg-info*
+build
+dist
