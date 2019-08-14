@@ -34,7 +34,10 @@ def main(year: int) -> None:
 
 
 def hdf_local_filepath(date: str, filename: str) -> str:
-    return src_path(date, filename)
+    year = date.split('.')[0]
+    # Del trailing '/' or `os.path.join` doesn't use right sep
+    src = src_path(year, date.replace('/', ''), filename)
+    return src
 
 
 def hdf_file_is_in_US(filename: str) -> bool:
@@ -70,10 +73,8 @@ def download_file(date: str, filename: str, session:
     """ Create src/date/ directory if it doesn't exist.
         Download and save hdf file. """
 
-    date_dir = src_path(date)
-    if not os.path.exists(date_dir):
-        print(f'Creating directory: {date_dir}')
-        os.mkdir(date_dir)
+    local_filepath = hdf_local_filepath(date, filename)
+    _make_local_dirs_as_needed(local_filepath)
 
     if session is None:
         session, username, password = initiate_earthdata_session()
@@ -85,7 +86,7 @@ def download_file(date: str, filename: str, session:
 
     if r.ok:
         print(f"Downloading {filename}...", end='', flush=True)
-        with open(hdf_local_filepath(date, filename), 'wb') as f:
+        with open(local_filepath, 'wb') as f:
             f.write(r.content)
         print("Done!", flush=True)
     else:
@@ -93,6 +94,20 @@ def download_file(date: str, filename: str, session:
         sys.exit(1)
 
     return session
+
+def _make_local_dirs_as_needed(local_filepath: str) -> None:
+    pieces = local_filepath.split(os.path.sep)
+    year_dir = os.path.join(*pieces[:-2])
+    date_dir = os.path.join(*pieces[:-1])
+    _check_for_dir_then_make(year_dir)
+    _check_for_dir_then_make(date_dir)
+
+def _check_for_dir_then_make(dirpath):
+    """ NOTE: Don't automatically make parents in case you landed in way, way,
+    wrong place """
+    if not os.path.exists(dirpath):
+        print(f'Creating directory: {dirpath}')
+        os.mkdir(dirpath)
 
 
 def initiate_earthdata_session():
