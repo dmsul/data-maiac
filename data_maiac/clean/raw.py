@@ -4,16 +4,13 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 from pyhdf.SD import SD, SDC
-from econtools import load_or_build
 
-from data_maiac.util.env import data_path
 from data_maiac.util.gis import sinu
 from data_maiac.clean.download import hdf_local_filepath
 
 SCALE_VALUE_47 = 0.001
 
 
-@load_or_build(data_path('aod47_{date}.pkl'))
 def aod47_conus_day(date: str) -> pd.DataFrame:
     """
     Aerosol Optical Depth (AOD) (0.47 micrometer) from MODIS Multi-Angle
