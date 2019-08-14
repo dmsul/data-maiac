@@ -52,14 +52,14 @@ def _get_state_bounds(state_abbr: str) -> tuple:
     return tuple(bounds)
 
 
-def prep_day(date: str, bounds: tuple) -> pd.DataFrame:
+def prep_day(date: str, bounds: tuple, buffer: float=0.1) -> pd.DataFrame:
     df = aod47_conus_day(date)
     minx, miny, maxx, maxy = bounds
     df = df[
-        (df['x'] <= maxx) &
-        (df['x'] >= minx) &
-        (df['y'] <= maxy) &
-        (df['y'] >= miny)
+        (df['x'] <= (maxx + buffer)) &
+        (df['x'] >= (minx - buffer)) &
+        (df['y'] <= (maxy + buffer)) &
+        (df['y'] >= (miny - buffer))
     ]
     year, month, day = [int(x) for x in date.split('.')]
 
