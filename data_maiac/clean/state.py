@@ -32,7 +32,7 @@ def aod47_state_month(state_abbr: str, year: int, month: int) -> pd.DataFrame:
     """
     day_list = [
         os.path.split(x)[1] for x in
-        glob(src_path(f'{year}.{str(month).zfill(2)}.*'))
+        glob(src_path(f'{year}', f'{year}.{str(month).zfill(2)}.*'))
     ]
     # Get state's XY bounds
     bounds = _get_state_bounds(state_abbr)
@@ -74,4 +74,6 @@ def prep_day(date: str, bounds: tuple, buffer: float=0.1) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    df = aod47_state_month('PA', 2013, 1)
+    for y in (2007, 2015):
+        for m in range(1, 13):
+            df = aod47_state_month('PA', y, m, _rebuild=True)
