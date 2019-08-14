@@ -18,9 +18,13 @@ US_HV_BOUNDS: Dict[int, tuple] = {
 ROOT_URL = 'https://e4ftl01.cr.usgs.gov/MOTA/MCD19A2.006'
 
 
-def main(year: int) -> None:
+def main(year: int, startday: Optional[int]=None) -> None:
     session = None
+
     this_year = [x for x in get_all_dates() if int(x[:4]) == year]
+    if startday:
+        this_year = this_year[startday:]
+
     for date in this_year:
         for filename in files_on_date(date):
             if not hdf_file_is_in_US(filename):
@@ -124,9 +128,10 @@ def hdf_file_url(date: str, filename: str) -> str:
 
 def cli():
     parser = argparse.ArgumentParser('Download MAIAC data')
-    parser.add_argument(
-        'year', type=int,
-        help='Input year to download. Int. 2000-present.')
+    parser.add_argument('year', type=int,
+                        help='Input year to download. Int. 2000-present.')
+    parser.add_argument('--startday', type=int,
+                        help='Start downloading on this day of the year.')
 
     args = parser.parse_args()
 
@@ -136,4 +141,4 @@ def cli():
 if __name__ == "__main__":
     args = cli()
 
-    main(args.year)
+    main(args.year, startday=args.startday)
